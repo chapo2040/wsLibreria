@@ -14,6 +14,8 @@ namespace Libreria.Controllers
     [ApiController]
     public class LibroController(AppDbContext _context) : ControllerBase
     {
+        //private readonly AppDbContext _context;
+
         // GET: api/Libro
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Libro>>> GetLibro()
