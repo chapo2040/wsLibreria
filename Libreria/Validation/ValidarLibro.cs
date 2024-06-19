@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace wsLibreria.Validation
 {
-    public class ValidarLibro : ControllerBase
+    public class ValidarLibro
     {
         private readonly AppDbContext _context;
 
@@ -20,7 +20,7 @@ namespace wsLibreria.Validation
 
         public async Task<IActionResult> PostLibro(Libro libro)
         {
-            if (LibroExists(libro.Id)) { return BadRequest(); }
+            if (LibroExists(libro.Id)) { return new BadRequestObjectResult("Libro ya éxiste."); }
 
             _context.Libro.Add(libro);
             await _context.SaveChangesAsync();
@@ -36,7 +36,7 @@ namespace wsLibreria.Validation
         {
             try
             {
-                if (id != libro.Id) { return BadRequest(); }
+                if (id != libro.Id) { return new BadRequestObjectResult("id incorrecto."); }
                 _context.Entry(libro).State = EntityState.Modified;
 
                 await _context.SaveChangesAsync();
@@ -52,7 +52,7 @@ namespace wsLibreria.Validation
         public async Task<IActionResult> DeleteLibro(int id)
         {
             var libro = await _context.Libro.FindAsync(id);
-            if (libro == null) { return BadRequest("Libro no encontrado"); }
+            if (libro == null) { return new BadRequestObjectResult("Libro no encontrado"); }
 
             _context.Libro.Remove(libro);
             await _context.SaveChangesAsync();

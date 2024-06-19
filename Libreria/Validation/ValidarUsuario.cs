@@ -6,7 +6,7 @@ using wsLibreria.Data;
 
 namespace wsLibreria.Validation
 {
-    public class ValidarUsuario: ControllerBase
+    public class ValidarUsuario
     {
         private readonly AppDbContext _context;
 
@@ -18,39 +18,41 @@ namespace wsLibreria.Validation
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
             var usuario = await _context.Usuario.FindAsync(id);
-            if (usuario == null) { return NotFound(); }
+            if (usuario == null) { return new BadRequestObjectResult("Usuario no existe."); }
             return usuario;
         }
 
         public ActionResult UsuarioCheck(Usuario usuario)
         {            
             Usuario loUsuario = _context.Usuario.FirstOrDefault(e => e.Username.ToUpper() == usuario.Username.ToUpper() && e.Password.ToUpper() == usuario.Password.ToUpper());
-            if (loUsuario != null) { return Ok(new Resultado(1, "contraeña correcta", loUsuario)); }
+            if (loUsuario != null) { return new OkObjectResult(new Resultado(1, "contraeña correcta", loUsuario)); }
             else
-            { return Ok(new Resultado(2, "Usuario y/o contraseña incorrecta.")); }            
+            { return new OkObjectResult(new Resultado(2, "Usuario y/o contraseña incorrecta.")); }            
         }
 
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
         {
             _context.Usuario.Add(usuario);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetUsuario", new { id = usuario.Id }, usuario);
+            return new OkObjectResult(usuario);
         }
 
         public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
         {
             try
             {
-                if (id != usuario.Id) { return BadRequest(); }
+                if (id != usuario.Id) { return new BadRequestObjectResult("Usuario no existe."); }
                 _context.Entry(usuario).State = EntityState.Modified;
+                
                 await _context.SaveChangesAsync();
+                return new OkObjectResult("Usuario actualizado con exitó.");
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UsuarioExists(id)) { return NotFound(); }
+                if (!UsuarioExists(id)) { return new BadRequestObjectResult("Usuario no existe."); }
             }
 
-            return NoContent();
+            return new NotFoundObjectResult("Usuario no existe.");
         }
 
         public bool UsuarioExists(int id)
@@ -61,11 +63,11 @@ namespace wsLibreria.Validation
         public async Task<IActionResult> DeleteUsuario(int id)
         {
             var usuario = await _context.Usuario.FindAsync(id);
-            if (usuario == null) { return NotFound(); }
+            if (usuario == null) { return new BadRequestObjectResult("Usuario no existe."); }
 
             _context.Usuario.Remove(usuario);
             await _context.SaveChangesAsync();
-            return Ok();
+            return new OkObjectResult("Usuario borrado con exitó.");
         }
     }
 }

@@ -28,8 +28,8 @@ namespace TestProject2
 
         [Test]
         [TestCase(1, 200)]
-        //[TestCase(2, 200)]
-        //[TestCase(3, 200)]
+        [TestCase(2, 200)]
+        [TestCase(3, 200)]
         public async Task AddLibro(int id, int code)
         {
             // Arrange
@@ -76,7 +76,8 @@ namespace TestProject2
         }
 
         [Test]
-        [TestCase(1, 400)]
+        //[TestCase(1, 400)]
+        [TestCase(3, 200)]
         public async Task UpdateLibro(int id, int code)
         {
             // Arrange
@@ -85,7 +86,7 @@ namespace TestProject2
 
             // Act
             LibroController servicio = new LibroController(db);
-            var response = await servicio.PutLibro(id, new Libro(4, "Volver el Futuro", 4, 0));
+            var response = await servicio.PutLibro(id, new Libro(id, "Volver el Futuro", 4, 0));
             var statusCodeResult = (IStatusCodeActionResult)response;
 
             // Asert
@@ -93,9 +94,10 @@ namespace TestProject2
         }
 
         [Test]
-        [TestCase(1, 200)]
-        //[TestCase(2, 200)]
+        //[TestCase(1, 200)]
+        [TestCase(2, 200)]
         //[TestCase(3, 400)]
+        //[TestCase(5, 400)]
         public async Task RemoveLibro(int id, int code)
         {
             // Arrange
