@@ -1,10 +1,14 @@
 using Libreria.Controllers;
 using Libreria.Data;
 using Microsoft.EntityFrameworkCore;
+using wsLibreria.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddTransient<ValidarUsuario>();
+builder.Services.AddTransient<ValidarLibro>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

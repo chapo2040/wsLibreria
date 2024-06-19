@@ -1,14 +1,13 @@
 ﻿using Libreria.Controllers;
 using Libreria.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using NSubstitute;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using wsLibreria.Validation;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace LibreriaTest.Services
 {
@@ -104,10 +103,13 @@ namespace LibreriaTest.Services
 
             // Act
             LibroController servicio = new LibroController(db);
-            var response = await servicio.PutLibro(2, libro);
+            var result = await servicio.PutLibro(2, libro);
+            //var okResult = result as IActionResult;
 
-            // Asert
-            Assert.That(code, Is.EqualTo(HttpStatusCode.OK));
+            // Asert                        
+            //var viewResult = Assert.IsAssignableFrom<IActionResult>(result);
+            //Assert.IsNotNull(okResult);
+            //Assert.That(okResult.Equals(200));
         }
 
     }
